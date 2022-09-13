@@ -40,6 +40,7 @@ public class App extends Application {
 
     boolean gameOver = false;
     int activePlayer=0;
+    int pendingChance = 8;
     int gameState[]={3,3,3,3,3,3,3,3,3};
     int[][] winningPosition = {
             {0,1,2},
@@ -113,6 +114,7 @@ public class App extends Application {
                 }
                 gameOver = false;
                 restartButton.setDisable(true);
+                pendingChance = 8;
 
             }
         });
@@ -138,12 +140,15 @@ public class App extends Application {
                                 currentButton.setGraphic(new ImageView(new Image("file:src/main/resources/x2.png")));
                                 gameState[id] = activePlayer;
                                 checkForWinner();
+                                pendingChance--;
                                 activePlayer = 0;
+
                             } else {
                                 //currentButton.setText(activePlayer + "");
                                 currentButton.setGraphic(new ImageView(new Image("file:src/main/resources/zero1.png")));
                                 gameState[id] = activePlayer;
                                 checkForWinner();
+                                pendingChance--;
                                 activePlayer = 1;
                             }
                         } else {
@@ -166,20 +171,14 @@ public class App extends Application {
             if(gameState[wp[0]] == gameState[wp[1]]  && gameState[wp[1]]  == gameState[wp[2]]  && gameState[wp[0]]  != 3){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Success Message");
-                alert.setContentText(activePlayer == 1 ? "X" : "0" +" has Won");
+                alert.setContentText(activePlayer == 1 ? "X"+" has won" : "0" +" has won");
                 alert.show();
                 restartButton.setDisable(false);
                 break;
             }
             else{
-                boolean flag = true;
-                for (int i : gameState){
-                    flag = true;
-                    if(i == 3) {
-                        flag = false;
-                    }
-                }
-                if(flag ){
+
+                if(pendingChance == 0){
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Draw Message");
                     alert.setContentText("It's Draw");
